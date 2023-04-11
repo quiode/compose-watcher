@@ -1,10 +1,7 @@
-import { logger } from './logger';
+import { logInfo } from './logger';
 
-export function main() {
-  logger.log({
-    message: 'Hello World!',
-    level: 'info'
-  });
+export default function main() {
+  logInfo("Hello World!");
 }
 
 main();
