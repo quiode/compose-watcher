@@ -6,6 +6,13 @@ const logger = createLogger({
   transports: [new transports.Console()]
 });
 
+export function logDebug(message: string) {
+  logger.log({
+    level: 'debug',
+    message
+  });
+}
+
 export function logInfo(message: string) {
   logger.log({
     level: 'info',

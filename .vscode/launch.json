@@ -1,0 +1,15 @@
+{
+  "configurations": [
+    {
+      "command": "pnpm start:dev",
+      "name": "Run start:dev",
+      "request": "launch",
+      "type": "node-terminal",
+      "env": {
+        "PORT": "8080",
+        "LOG": "debug",
+        "INTERVAL": "-1"
+      },
+    }
+  ]
+}
