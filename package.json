@@ -1,0 +1,37 @@
+{
+	"name": "compose-watcher",
+	"description": "Watches a git repository for changes and updates all contained docker compose stacks",
+	"version": "0.1.0",
+	"maintainers": [
+		"Dominik Schwaiget <mail@dominik-schwaiger.ch>"
+	],
+	"homepage": "https://github.com/quiode/compose-watcher",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/quiode/compose-watcher"
+	},
+	"author": {
+		"name": "Dominik Schwaiger",
+		"email": "mail@dominik-schwaiger.ch",
+		"url": "https://dominik-schwaiger.ch"
+	},
+	"scripts": {
+		"build": "rimraf ./dist && tsc",
+		"start": "pnpm run build && node dist/index.js",
+		"start:dev": "pnpm nodemon"
+	},
+	"engines": {
+		"node": "~18.15.0"
+	},
+	"license": "MIT",
+	"devDependencies": {
+		"@types/node": "^18.15.11",
+		"nodemon": "^2.0.22",
+		"rimraf": "^5.0.0",
+		"ts-node": "^10.9.1",
+		"typescript": "^5.0.4"
+	},
+	"dependencies": {
+		"winston": "^3.8.2"
+	}
+}
