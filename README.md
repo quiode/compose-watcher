@@ -2,6 +2,11 @@
 
 // TODO
 
+## Requirements
+
+- `docker compose`
+- `git`
+
 ## Configuration
 
 ### Environment Variables
