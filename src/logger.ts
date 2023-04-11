@@ -1,7 +1,8 @@
 import { createLogger, format, transports } from "winston";
+import { LOG } from './constants';
 
 const logger = createLogger({
-  level: process.env.LOG ?? 'info',
+  level: LOG,
   format: format.combine(format.timestamp(), format.printf(info => `${info.timestamp} | ${info.level} | ${info.message}`)),
   transports: [new transports.Console()]
 });
@@ -32,4 +33,15 @@ export function logError(message: string) {
     level: 'error',
     message
   });
+}
+
+/**
+ * log error, then exit
+ */
+export function errorAndExit(message: string) {
+  logger.log({
+    level: 'error',
+    message
+  });
+  process.exit(1);
 }

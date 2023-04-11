@@ -1,11 +1,15 @@
 import { createServer } from 'http';
-import { HOSTNAME, INTERVAL, PORT, WEBHOOK } from './constants';
-import { logDebug, logError, logInfo } from './logger';
+import { GIT_DIR, HOSTNAME, INTERVAL, PORT, REMOTE_URL, WEBHOOK } from './constants';
+import { errorAndExit, logDebug, logInfo, logWarn } from './logger';
+import { Glob } from 'glob';
+import { git } from './git';
+import { pullAll, upAll } from 'docker-compose';
+import { existsSync } from 'fs';
+import path from 'path';
 
 export default function main() {
   if (!INTERVAL && !WEBHOOK) {
-    logError('No webhook and no interval is defined. Shutting down!');
-    process.exit(1);
+    errorAndExit('No webhook and no interval is defined. Shutting down!');
   }
 
   if (INTERVAL > 0) {
@@ -25,8 +29,61 @@ export default function main() {
   }
 }
 
-function onRepoUpdate() {
-  logDebug('Updating Repository');
+async function onRepoUpdate() {
+  logDebug('Updating Repository...');
+  // timer start
+  const startTime = new Date();
+  let update_count = 0;
+  // Check if Repo doesn't exist, clone repo
+  if (!(await git.checkIsRepo())) {
+    logWarn('No git repository found. Creating a new one');
+
+    try {
+      await git.init();
+      await git.addRemote('origin', REMOTE_URL);
+    } catch (error) {
+      logDebug('Error: ' + JSON.stringify(error ?? 'null'));
+      errorAndExit('Error while trying to create a git repository, shutting down!');
+    }
+  }
+
+  // if repo has changes, throw an error
+  if (!(await git.status()).isClean()) {
+    errorAndExit('Git repository is not clean, can\'t pull. Shutting down!');
+  }
+
+  // pull repo
+  try {
+    await git.pull();
+  } catch (error) {
+    logDebug('Error: ' + JSON.stringify(error ?? 'null'));
+    errorAndExit('Error while pulling git repository. Shutting down!');
+  }
+
+  // find all docker compose files
+  const glob = new Glob('**/docker-compose.{yml,yaml}', { cwd: GIT_DIR, nodir: true, absolute: true });
+
+  // iterate through all compose files
+  for (const file of glob) {
+    logDebug('Update compose-file: ' + file);
+    const dir = file.slice(0, file.lastIndexOf('docker-compose'));
+    // check for watcher file
+    if (existsSync(dir + '.watcherignore')) {
+      logDebug('Found a .watcherignore file, skipping directory!');
+      continue;
+    }
+
+    // compose pull
+    await pullAll({ log: false, cwd: dir });
+    // compose up
+    await upAll({ log: false, cwd: dir });
+
+    update_count++;
+  }
+
+  // timer end
+  const time_diff = Math.round(((new Date()).getTime() - startTime.getTime()) / 1000);
+  logInfo(`Updated ${update_count} compose files in ${time_diff} seconds!`);
 }
 
 main();

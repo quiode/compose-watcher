@@ -7,6 +7,7 @@ VOLUME [ "/var/run/docker.sock" ]
 ENV PORT=80
 ENV HOSTNAME=0.0.0.0
 ENV LOG=info
+ENV GIT_DIR=/repository
 EXPOSE 80
 
 # install dependencies

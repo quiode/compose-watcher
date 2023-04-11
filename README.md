@@ -9,6 +9,12 @@
 
 ## Configuration
 
+### .watcherignore
+
+If a `.watcherignore` file is found next to a `docker-compose` file, the `docker-compose` file gets skipped.
+
+Usefull when hosting the compose-watcher instance in the same repository as the other compose files.
+
 ### Environment Variables
 
 - `LOG` (default: `info`)
@@ -19,3 +25,7 @@
 - `PORT` (default: `80`)
   - webhook port, -1 to disable
 - `HOSTNAME` (default: `127.0.0.1`)
+- `GIT_DIR` (default: `./repository`)
+  - GIT Repository Diretory
+- `REMOTE_URL` (default: `''`)
+  - URL of the REMOTE, needed when no git directory exists
