@@ -29,3 +29,7 @@ Usefull when hosting the compose-watcher instance in the same repository as the 
   - GIT Repository Diretory
 - `REMOTE_URL` (default: `''`)
   - URL of the REMOTE, needed when no git directory exists
+
+## TODO
+
+- GitHub CI Action
