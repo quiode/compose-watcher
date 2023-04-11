@@ -11,7 +11,7 @@
 
 ### Environment Variables
 
-- `LOG` (default: `debug`)
+- `LOG` (default: `info`)
   - `debug`, `info`, `warning`, `error`
 - `INTERVAL` (default: `86400`)
   - pull interval in seconds
