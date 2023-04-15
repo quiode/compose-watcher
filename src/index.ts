@@ -84,8 +84,8 @@ async function onRepoUpdate() {
         await pullAll({ log: LOG === 'debug', cwd: dir });
         // compose up
         await upAll({ log: LOG === 'debug', cwd: dir });
-      } catch (error) {
-        logDebug("Error: " + JSON.stringify(error));
+      } catch (error: any) {
+        logDebug("Error: " + error?.err ?? JSON.stringify(error));
         errorAndExit("Error while running docker compose pull/up!");
       }
 
