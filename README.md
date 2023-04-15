@@ -7,6 +7,12 @@
 - `docker compose`
 - `git`
 
+## Quick Setup
+
+### Docker Compose
+
+// TODO
+
 ## Configuration
 
 ### .watcherignore
@@ -34,6 +40,6 @@ If a file with the name `.watcher-{x}` if found, where x is a number (`.watcher-
 - `REMOTE_URL` (default: `''`)
   - URL of the REMOTE, needed when no git directory exists
 
-## TODO
+## Example Folder Structure of REMOTE_URL Repo
 
-- GitHub CI Action
+// TODO
