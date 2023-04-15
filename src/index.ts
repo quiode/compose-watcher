@@ -71,7 +71,7 @@ async function onRepoUpdate() {
 
     // .watcher-{x}
     // loop through all glob files and assign each a number (-1 if no .watcher-x annotation)
-    const files: { file: string, order: number }[] = [];
+    const files: { file: string, order: number, dir: string }[] = [];
     for (const file of glob) {
       const dir = file.slice(0, file.lastIndexOf('docker-compose'));
       // check for watcher file
@@ -97,12 +97,14 @@ async function onRepoUpdate() {
 
         files.push({
           file,
-          order
+          order,
+          dir
         });
       } else {
         files.push({
           file,
-          order: -1
+          order: -1,
+          dir
         });
       }
     }
@@ -113,20 +115,14 @@ async function onRepoUpdate() {
     });
 
     // iterate through all compose files
-    for (const file of files.map(file => file.file)) {
-      logDebug('Update compose-file: ' + file);
-      const dir = file.slice(0, file.lastIndexOf('docker-compose'));
-      // check for watcher file
-      if (existsSync(dir + '.watcherignore')) {
-        logDebug('Found a .watcherignore file, skipping directory!');
-        continue;
-      }
+    for (const file of files) {
+      logDebug('Update compose-file: ' + file.file);
 
       try {
         // compose pull
-        await pullAll({ log: LOG === 'debug', cwd: dir });
+        await pullAll({ log: LOG === 'debug', cwd: file.dir });
         // compose up
-        await upAll({ log: LOG === 'debug', cwd: dir });
+        await upAll({ log: LOG === 'debug', cwd: file.dir });
       } catch (error: any) {
         logDebug("Error: " + error?.err ?? JSON.stringify(error));
         errorAndExit("Error while running docker compose pull/up!");
