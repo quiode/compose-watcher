@@ -69,8 +69,51 @@ async function onRepoUpdate() {
     // find all docker compose files
     const glob = new Glob('**/docker-compose.{yml,yaml}', { cwd: GIT_DIR, nodir: true, absolute: true });
 
-    // iterate through all compose files
+    // .watcher-{x}
+    // loop through all glob files and assign each a number (-1 if no .watcher-x annotation)
+    const files: { file: string, order: number }[] = [];
     for (const file of glob) {
+      const dir = file.slice(0, file.lastIndexOf('docker-compose'));
+      // check for watcher file
+      if (existsSync(dir + '.watcherignore')) {
+        logDebug('Found a .watcherignore file, skipping directory!');
+        continue;
+      }
+
+      const watcherGLob = new Glob(dir + '.watcher-?[0,1,2,3,4,5,6,7,8,9]', { cwd: GIT_DIR, nodir: true, absolute: true });
+      const ignoreList: string[] = [];
+
+      for (const ignoreFile of watcherGLob) {
+        ignoreList.push(ignoreFile);
+      }
+
+      if (ignoreList.length > 0) {
+        if (ignoreList.length > 1) {
+          logWarn("Found more than one .watcher-{x} ignore file, using the first one found!");
+        }
+
+        const orderFile = ignoreList[0];
+        const order = +orderFile.slice(orderFile.lastIndexOf('.watcher-') + '.watcher-'.length);
+
+        files.push({
+          file,
+          order
+        });
+      } else {
+        files.push({
+          file,
+          order: -1
+        });
+      }
+    }
+    files.sort((a, b) => {
+      if (a.order === -1) return 1;
+      if (b.order === -1) return -1;
+      return a.order - b.order;
+    });
+
+    // iterate through all compose files
+    for (const file of files.map(file => file.file)) {
       logDebug('Update compose-file: ' + file);
       const dir = file.slice(0, file.lastIndexOf('docker-compose'));
       // check for watcher file

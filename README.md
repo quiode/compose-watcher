@@ -15,6 +15,10 @@ If a `.watcherignore` file is found next to a `docker-compose` file, the `docker
 
 Usefull when hosting the compose-watcher instance in the same repository as the other compose files.
 
+### .watcher-{x}
+
+If a file with the name `.watcher-{x}` if found, where x is a number (`.watcher-1`), the docker compose files get executed in the order of the numbers (1, 2, 3). Docker compose files wihout a `.watcher-{x}` file get executed last.
+
 ### Environment Variables
 
 - `LOG` (default: `info`)
