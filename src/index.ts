@@ -39,8 +39,7 @@ async function onRepoUpdate() {
     logWarn('No git repository found. Creating a new one');
 
     try {
-      await git.init();
-      await git.addRemote('origin', REMOTE_URL);
+      await git.clone(REMOTE_URL);
     } catch (error) {
       logDebug('Error: ' + JSON.stringify(error ?? 'null'));
       errorAndExit('Error while trying to create a git repository, shutting down!');
