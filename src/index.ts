@@ -79,10 +79,15 @@ async function onRepoUpdate() {
         continue;
       }
 
-      // compose pull
-      await pullAll({ log: LOG === 'debug', cwd: dir });
-      // compose up
-      await upAll({ log: LOG === 'debug', cwd: dir });
+      try {
+        // compose pull
+        await pullAll({ log: LOG === 'debug', cwd: dir });
+        // compose up
+        await upAll({ log: LOG === 'debug', cwd: dir });
+      } catch (error) {
+        logDebug("Error: " + JSON.stringify(error));
+        errorAndExit("Error while running docker compose pull/up!");
+      }
 
       update_count++;
     }
