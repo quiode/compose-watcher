@@ -9,7 +9,7 @@
         "PORT": "8080",
         "LOG": "debug",
         "INTERVAL": "-1",
-        "REPO_URL": "git@github.com:quiode/beaststation-docker-compose.git"
+        "REMOTE_URL": "git@github.com:quiode/beaststation-docker-compose.git"
       },
     }
   ]
