@@ -80,7 +80,7 @@ async function onRepoUpdate() {
         continue;
       }
 
-      const watcherGLob = new Glob(dir + '.watcher-?[0,1,2,3,4,5,6,7,8,9]', { cwd: GIT_DIR, nodir: true, absolute: true });
+      const watcherGLob = new Glob(dir + '.watcher-+(0|1|2|3|4|5|6|7|8|9)', { cwd: GIT_DIR, nodir: true, absolute: true });
       const ignoreList: string[] = [];
 
       for (const ignoreFile of watcherGLob) {
