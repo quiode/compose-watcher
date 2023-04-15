@@ -5,7 +5,6 @@ import { Glob } from 'glob';
 import { git } from './git';
 import { pullAll, upAll } from 'docker-compose';
 import { existsSync } from 'fs';
-import path from 'path';
 
 export default function main() {
   if (!INTERVAL && !WEBHOOK) {
