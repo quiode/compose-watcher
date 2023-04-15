@@ -1,5 +1,5 @@
 import { createServer } from 'http';
-import { GIT_DIR, HOSTNAME, INTERVAL, PORT, REMOTE_URL, WEBHOOK } from './constants';
+import { GIT_DIR, HOSTNAME, INTERVAL, LOG, PORT, REMOTE_URL, WEBHOOK } from './constants';
 import { errorAndExit, logDebug, logInfo, logWarn } from './logger';
 import { Glob } from 'glob';
 import { git } from './git';
@@ -33,12 +33,18 @@ async function onRepoUpdate() {
   // timer start
   const startTime = new Date();
   let update_count = 0;
+
+  // if repo is new, always execute compose up
+  let newRepo = false;
+
   // Check if Repo doesn't exist, clone repo
   if (!(await git.checkIsRepo())) {
     logWarn('No git repository found. Creating a new one');
 
     try {
-      await git.clone(REMOTE_URL);
+      await git.clone(REMOTE_URL, GIT_DIR);
+      logDebug("New Git Repository created!");
+      newRepo = true;
     } catch (error) {
       logDebug('Error: ' + JSON.stringify(error ?? 'null'));
       errorAndExit('Error while trying to create a git repository, shutting down!');
@@ -51,7 +57,7 @@ async function onRepoUpdate() {
   }
 
   // only deploy docker when changes exist in origin
-  if ((await git.status()).behind) {
+  if ((await git.status()).behind || newRepo) {
     // pull repo
     try {
       await git.pull();
@@ -74,9 +80,9 @@ async function onRepoUpdate() {
       }
 
       // compose pull
-      await pullAll({ log: false, cwd: dir });
+      await pullAll({ log: LOG === 'debug', cwd: dir });
       // compose up
-      await upAll({ log: false, cwd: dir });
+      await upAll({ log: LOG === 'debug', cwd: dir });
 
       update_count++;
     }
