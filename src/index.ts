@@ -51,38 +51,43 @@ async function onRepoUpdate() {
     errorAndExit('Git repository is not clean, can\'t pull. Shutting down!');
   }
 
-  // pull repo
-  try {
-    await git.pull();
-  } catch (error) {
-    logDebug('Error: ' + JSON.stringify(error ?? 'null'));
-    errorAndExit('Error while pulling git repository. Shutting down!');
-  }
-
-  // find all docker compose files
-  const glob = new Glob('**/docker-compose.{yml,yaml}', { cwd: GIT_DIR, nodir: true, absolute: true });
-
-  // iterate through all compose files
-  for (const file of glob) {
-    logDebug('Update compose-file: ' + file);
-    const dir = file.slice(0, file.lastIndexOf('docker-compose'));
-    // check for watcher file
-    if (existsSync(dir + '.watcherignore')) {
-      logDebug('Found a .watcherignore file, skipping directory!');
-      continue;
+  // only deploy docker when changes exist in origin
+  if ((await git.status()).behind) {
+    // pull repo
+    try {
+      await git.pull();
+    } catch (error) {
+      logDebug('Error: ' + JSON.stringify(error ?? 'null'));
+      errorAndExit('Error while pulling git repository. Shutting down!');
     }
 
-    // compose pull
-    await pullAll({ log: false, cwd: dir });
-    // compose up
-    await upAll({ log: false, cwd: dir });
+    // find all docker compose files
+    const glob = new Glob('**/docker-compose.{yml,yaml}', { cwd: GIT_DIR, nodir: true, absolute: true });
 
-    update_count++;
+    // iterate through all compose files
+    for (const file of glob) {
+      logDebug('Update compose-file: ' + file);
+      const dir = file.slice(0, file.lastIndexOf('docker-compose'));
+      // check for watcher file
+      if (existsSync(dir + '.watcherignore')) {
+        logDebug('Found a .watcherignore file, skipping directory!');
+        continue;
+      }
+
+      // compose pull
+      await pullAll({ log: false, cwd: dir });
+      // compose up
+      await upAll({ log: false, cwd: dir });
+
+      update_count++;
+    }
+
+    // timer end
+    const time_diff = Math.round(((new Date()).getTime() - startTime.getTime()) / 1000);
+    logInfo(`Updated ${update_count} compose files in ${time_diff} seconds!`);
+  } else {
+    logDebug("No changes found.");
   }
-
-  // timer end
-  const time_diff = Math.round(((new Date()).getTime() - startTime.getTime()) / 1000);
-  logInfo(`Updated ${update_count} compose files in ${time_diff} seconds!`);
 }
 
 main();
