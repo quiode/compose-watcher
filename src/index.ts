@@ -3,8 +3,8 @@ import { REPO_DIR, HOSTNAME, INTERVAL, LOG, PORT, REMOTE_URL, WEBHOOK } from './
 import { errorAndExit, logDebug, logInfo, logWarn } from './logger';
 import { Glob } from 'glob';
 import { git } from './git';
-import { pullAll, upAll } from 'docker-compose';
 import { existsSync } from 'fs';
+import { pullAll, upAll } from './compose';
 
 export default function main() {
   if (!INTERVAL && !WEBHOOK) {
@@ -78,7 +78,7 @@ async function onRepoUpdate() {
 
     // .watcher-{x}
     // loop through all glob files and assign each a number (-1 if no .watcher-x annotation)
-    const files: { file: string, order: number, dir: string }[] = [];
+    const files: { file: string, order: number }[] = [];
     for (const file of glob) {
       const dir = file.slice(0, file.lastIndexOf('docker-compose'));
       // check for watcher file
@@ -104,14 +104,12 @@ async function onRepoUpdate() {
 
         files.push({
           file,
-          order,
-          dir
+          order
         });
       } else {
         files.push({
           file,
-          order: -1,
-          dir
+          order: -1
         });
       }
     }
@@ -125,23 +123,12 @@ async function onRepoUpdate() {
     for (const file of files) {
       logDebug('Update compose-file: ' + file.file);
 
-      try {
-        // compose pull
-        await pullAll({ log: LOG === 'debug', cwd: file.dir });
-      } catch (error: any) {
-        logDebug("Error: " + error?.err ?? JSON.stringify(error));
-        logDebug("File: " + JSON.stringify(file));
-        errorAndExit("Error while running docker compose pull!");
-      }
+      // compose pull
+      pullAll(file.file);
 
-      try {
-        // compose up
-        await upAll({ log: LOG === 'debug', cwd: file.dir });
-      } catch (error: any) {
-        logDebug("Error: " + error?.err ?? JSON.stringify(error));
-        logDebug("File: " + JSON.stringify(file));
-        errorAndExit("Error while running docker compose up!");
-      }
+      // compose up
+      upAll(file.file);
+
 
       update_count++;
     }
