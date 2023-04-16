@@ -2,6 +2,7 @@ FROM "node:18-alpine"
 
 # Config
 VOLUME [ "/app/repository" ]
+VOLUME [ "/root/.ssh" ]
 # Read only (:ro)
 VOLUME [ "/var/run/docker.sock" ]
 ENV PORT=80
@@ -14,10 +15,8 @@ EXPOSE 80
 RUN apk update && apk --no-cache add git docker openssh
 RUN npm i -g pnpm
 
-# workdir & user
+# workdir
 WORKDIR /app
-RUN addgroup watcher && adduser watcher -D -G watcher && chown -R watcher:watcher /app && chown -R watcher:watcher /home/watcher/.ssh && mkdir repository
-USER watcher
 
 # npm packages
 COPY package.json pnpm-lock.yaml ./
