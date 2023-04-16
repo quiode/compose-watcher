@@ -127,7 +127,7 @@ async function onRepoUpdate() {
 
       try {
         // compose pull
-        await pullAll({ log: LOG === 'debug', cwd: file.dir, executablePath: 'docker compose' });
+        await pullAll({ log: LOG === 'debug', cwd: file.dir });
       } catch (error: any) {
         logDebug("Error: " + error?.err ?? JSON.stringify(error));
         logDebug("File: " + JSON.stringify(file));
@@ -136,7 +136,7 @@ async function onRepoUpdate() {
 
       try {
         // compose up
-        await upAll({ log: LOG === 'debug', cwd: file.dir, executablePath: 'docker compose' });
+        await upAll({ log: LOG === 'debug', cwd: file.dir });
       } catch (error: any) {
         logDebug("Error: " + error?.err ?? JSON.stringify(error));
         logDebug("File: " + JSON.stringify(file));

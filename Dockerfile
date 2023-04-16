@@ -42,6 +42,9 @@ RUN echo \
 RUN apt update
 RUN apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
+# Docker Compose
+RUN echo "docker compose" > /usr/bin/docker-compose && chmod +x /usr/bin/docker-compose
+
 # install pnpm
 RUN npm i -g pnpm
 
