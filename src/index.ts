@@ -5,6 +5,7 @@ import { Glob } from 'glob';
 import { git } from './git';
 import { pullAll, upAll } from 'docker-compose';
 import { existsSync } from 'fs';
+import { TextEncoderStream } from 'node:stream/web';
 
 export default function main() {
   if (!INTERVAL && !WEBHOOK) {
@@ -54,6 +55,13 @@ async function onRepoUpdate() {
   // if repo has changes, throw an error
   if (!(await git.status()).isClean()) {
     errorAndExit('Git repository is not clean, can\'t pull. Shutting down!');
+  }
+
+  // fetch
+  try {
+    await git.fetch();
+  } catch (error) {
+    errorAndExit("Error while fetching git repo!");
   }
 
   // only deploy docker when changes exist in origin
