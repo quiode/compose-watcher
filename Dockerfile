@@ -16,7 +16,7 @@ RUN npm i -g pnpm
 
 # workdir & user
 WORKDIR /app
-RUN addgroup watcher && adduser watcher -D -G watcher && chown -R watcher:watcher /app && mkdir repository
+RUN addgroup watcher && adduser watcher -D -G watcher && chown -R watcher:watcher /app && chown -R watcher:watcher /home/watcher/.ssh && mkdir repository
 USER watcher
 
 # npm packages
