@@ -1,3 +1,16 @@
+FROM "node:18-alpine" as build
+
+# pnpm
+RUN npm i -g pnpm
+
+# workdir
+WORKDIR /build
+
+# build
+COPY package.json pnpm-lock.yaml tsconfig.json ./
+COPY src src
+RUN pnpm i && pnpm build
+
 FROM "node:18-alpine"
 
 # Config
@@ -20,10 +33,9 @@ WORKDIR /app
 
 # npm packages
 COPY package.json pnpm-lock.yaml ./
-RUN pnpm i
+RUN pnpm i -P
 
-# final steps
-COPY tsconfig.json ./
-COPY src src
+# copy dist
+COPY --from=build /build/dist dist
 
 CMD pnpm start
