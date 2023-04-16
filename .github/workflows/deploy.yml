@@ -28,4 +28,4 @@ jobs:
           context: ./
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/meal-finder-frontend,${{ secrets.DOCKERHUB_USERNAME }}/meal-finder-frontend:${{ steps.package-version.outputs.current-version }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/compose-watcher,${{ secrets.DOCKERHUB_USERNAME }}/compose-watcher:${{ steps.package-version.outputs.current-version }}
