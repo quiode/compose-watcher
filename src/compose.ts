@@ -1,5 +1,4 @@
 import { spawn } from 'child_process';
-import commandExists from 'command-exists';
 
 interface ComposeResult {
   exitCode: number | null;
@@ -17,26 +16,16 @@ export function pullAll(file: string, log: boolean) {
 
 function dockerExec(command: string, file: string, log: boolean): Promise<ComposeResult> {
   return new Promise((resolve, reject): void => {
-    let compose = 'docker compose';
-
-    if (!commandExists.sync(compose)) {
-      compose = 'docker-compose';
-
-      if (!commandExists.sync(compose)) {
-        Promise.reject('docker compose not found!');
-      }
-    }
-
-    const finalCommand = [compose, '--file', file, command].join(" ");
+    const args: string[] = ['compose', '--file', file, command];
 
     if (log) {
-      console.log("Docker Compose Command: ", finalCommand);
+      console.log("Docker Compose Command: docker", args.join(" "));
     }
 
-    const childProc = spawn(finalCommand);
+    const childProc = spawn('docker', args);
 
     childProc.on('error', (err): void => {
-      reject(err)
+      reject(err);
     });
 
     const result: ComposeResult = {
