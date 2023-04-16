@@ -21,7 +21,7 @@ USER watcher
 
 # npm packages
 COPY package.json pnpm-lock.yaml ./
-RUN pnpm i -P
+RUN pnpm i
 
 # final steps
 COPY tsconfig.json ./
