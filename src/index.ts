@@ -20,6 +20,7 @@ export default function main() {
   if (WEBHOOK) {
     // start server
     const server = createServer(async (req, res) => {
+      logDebug("Webhook update received!");
       const buffers = [] as Uint8Array[];
 
       for await (const chunk of req) {
@@ -30,7 +31,7 @@ export default function main() {
 
       // check webhook
       if (!checkWebhook(req.headers["x-hub-signature-256"] as string | undefined ?? '', data)) {
-        logError('Request hash is invalid. Ingoring request!');
+        logWarn('Request hash is invalid. Ingoring request!');
         return;
       }
 
