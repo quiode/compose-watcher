@@ -39,7 +39,7 @@ async function onRepoUpdate() {
 
   // Check if Repo doesn't exist, clone repo
   if (!(await git.checkIsRepo())) {
-    logWarn('No git repository found. Creating a new one');
+    logWarn(`No git repository found in ${GIT_DIR}. Creating a new one with url ${REMOTE_URL}.`);
 
     try {
       await git.clone(REMOTE_URL, GIT_DIR);
