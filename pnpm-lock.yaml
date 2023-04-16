@@ -1,6 +1,9 @@
 lockfileVersion: '6.0'
 
 dependencies:
+  command-exists:
+    specifier: ^1.2.9
+    version: 1.2.9
   glob:
     specifier: ^10.0.0
     version: 10.0.0
@@ -12,6 +15,9 @@ dependencies:
     version: 3.8.2
 
 devDependencies:
+  '@types/command-exists':
+    specifier: ^1.2.0
+    version: 1.2.0
   '@types/node':
     specifier: ^18.15.11
     version: 18.15.11
@@ -92,6 +98,10 @@ packages:
 
   /@tsconfig/node16@1.0.3:
     resolution: {integrity: sha512-yOlFc+7UtL/89t2ZhjPvvB/DeAr3r+Dq58IgzsFkOAvVC6NMJXmCGjbptdXdR9qsX7pKcTL+s87FtYREi2dEEQ==}
+    dev: true
+
+  /@types/command-exists@1.2.0:
+    resolution: {integrity: sha512-ugsxEJfsCuqMLSuCD4PIJkp5Uk2z6TCMRCgYVuhRo5cYQY3+1xXTQkSlPtkpGHuvWMjS2KTeVQXxkXRACMbM6A==}
     dev: true
 
   /@types/node@18.15.11:
@@ -208,6 +218,10 @@ packages:
     dependencies:
       color: 3.2.1
       text-hex: 1.0.0
+    dev: false
+
+  /command-exists@1.2.9:
+    resolution: {integrity: sha512-LTQ/SGc+s0Xc0Fu5WaKnR0YiygZkm9eKFvyS+fRsU7/ZWFF8ykFM6Pc9aCVf1+xasOOZpO3BAVgVrKvsqKHV7w==}
     dev: false
 
   /concat-map@0.0.1:
