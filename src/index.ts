@@ -84,7 +84,7 @@ async function onRepoUpdate() {
       const dir = file.slice(0, file.lastIndexOf('docker-compose'));
       // check for watcher file
       if (existsSync(dir + '.watcherignore')) {
-        logDebug('Found a .watcherignore file, skipping directory!');
+        logDebug(`Found a .watcherignore file, skipping directory (${dir})!`);
         continue;
       }
 
