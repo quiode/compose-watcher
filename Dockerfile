@@ -11,7 +11,7 @@ ENV GIT_DIR=/app/repository
 EXPOSE 80
 
 # install dependencies
-RUN apk --no-cache add git docker
+RUN apk --no-cache add git docker ssh
 RUN npm i -g pnpm
 
 # workdir & user
