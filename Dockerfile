@@ -24,6 +24,9 @@ ENV LOG=info
 ENV REPO_DIR=/app/repository
 EXPOSE 80
 
+# ignore double ownership
+RUN git config --global safe.directory '*'
+
 # install dependencies
 RUN apt update && apt install -y docker docker-compose
 RUN npm i -g pnpm
