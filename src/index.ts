@@ -124,14 +124,23 @@ async function onRepoUpdate() {
     for (const file of files) {
       logDebug('Update compose-file: ' + file.file);
 
-      try {
-        // compose pull
-        await pullAll(file.file, LOG === 'debug');
-      } catch {
-        logDebug("File: " + JSON.stringify(file));
-        logError("Error while pulling image for: " + file.file);
-        error_count++;
-        continue;
+      let err_count = 0;
+      let success = false;
+      while (!success) {
+        try {
+          // compose pull
+          await pullAll(file.file, LOG === 'debug');
+          success = true;
+        } catch {
+          err_count++;
+          if (err_count > 3) {
+            errorAndExit("Error while running compose up!");
+            logDebug("File: " + JSON.stringify(file));
+            logError("Error while pulling image for: " + file.file);
+            error_count++;
+            continue;
+          }
+        }
       }
 
       try {
