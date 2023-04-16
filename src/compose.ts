@@ -27,7 +27,13 @@ function dockerExec(command: string, file: string, log: boolean): Promise<Compos
       }
     }
 
-    const childProc = spawn([compose, '--file', file, command].join(" "));
+    const finalCommand = [compose, '--file', file, command].join(" ");
+
+    if (log) {
+      console.log("Docker Compose Command: ", finalCommand);
+    }
+
+    const childProc = spawn(finalCommand);
 
     childProc.on('error', (err): void => {
       reject(err)
