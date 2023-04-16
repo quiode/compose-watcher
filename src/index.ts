@@ -5,7 +5,6 @@ import { Glob } from 'glob';
 import { git } from './git';
 import { pullAll, upAll } from 'docker-compose';
 import { existsSync } from 'fs';
-import { TextEncoderStream } from 'node:stream/web';
 
 export default function main() {
   if (!INTERVAL && !WEBHOOK) {
@@ -128,7 +127,7 @@ async function onRepoUpdate() {
 
       try {
         // compose pull
-        await pullAll({ log: LOG === 'debug', cwd: file.dir });
+        await pullAll({ log: LOG === 'debug', cwd: file.dir, executablePath: 'docker compose' });
       } catch (error: any) {
         logDebug("Error: " + error?.err ?? JSON.stringify(error));
         logDebug("File: " + JSON.stringify(file));
@@ -137,7 +136,7 @@ async function onRepoUpdate() {
 
       try {
         // compose up
-        await upAll({ log: LOG === 'debug', cwd: file.dir });
+        await upAll({ log: LOG === 'debug', cwd: file.dir, executablePath: 'docker compose' });
       } catch (error: any) {
         logDebug("Error: " + error?.err ?? JSON.stringify(error));
         logDebug("File: " + JSON.stringify(file));
