@@ -1,4 +1,4 @@
-FROM "node:18-alpine" as build
+FROM "node:18" as build
 
 # pnpm
 RUN npm i -g pnpm
@@ -11,7 +11,7 @@ COPY package.json pnpm-lock.yaml tsconfig.json ./
 COPY src src
 RUN pnpm i && pnpm build
 
-FROM "node:18-alpine"
+FROM "node:18"
 
 # Config
 VOLUME [ "/app/repository" ]
@@ -25,7 +25,7 @@ ENV GIT_DIR=/app/repository
 EXPOSE 80
 
 # install dependencies
-RUN apk update && apk --no-cache add git docker openssh
+RUN apt update && apt install -y docker docker-compose
 RUN npm i -g pnpm
 
 # workdir
