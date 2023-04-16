@@ -1,6 +1,6 @@
 {
 	"name": "compose-watcher",
-	"version": "0.1.0",
+	"version": "1.0.0",
 	"description": "Watches a git repository for changes and updates all contained docker compose stacks",
 	"maintainers": [
 		"Dominik Schwaiget <mail@dominik-schwaiger.ch>"
