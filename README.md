@@ -43,6 +43,9 @@ If a file with the name `.watcher-{x}` if found, where x is a number (`.watcher-
   - GIT Repository Diretory
 - `REMOTE_URL` (default: `''`)
   - URL of the REMOTE, needed when no git directory exists
+- `WEBHOOK_SECRET` (default: `''`)
+  - if set, check webhook (improves security)
+  - see: <https://docs.github.com/en/webhooks-and-events/webhooks/securing-your-webhooks>
 
 ## Example Folder Structure of REMOTE_URL Repo
 

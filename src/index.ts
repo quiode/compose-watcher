@@ -1,10 +1,11 @@
 import { createServer } from 'http';
-import { REPO_DIR, HOSTNAME, INTERVAL, LOG, PORT, REMOTE_URL, WEBHOOK } from './constants';
+import { REPO_DIR, HOSTNAME, INTERVAL, LOG, PORT, REMOTE_URL, WEBHOOK, WEBHOOK_SECRET } from './constants';
 import { errorAndExit, logDebug, logError, logInfo, logWarn } from './logger';
 import { Glob } from 'glob';
 import { git } from './git';
 import { existsSync } from 'fs';
 import { pullAll, upAll } from './compose';
+import { createHash, createHmac } from 'crypto';
 
 export default function main() {
   if (!INTERVAL && !WEBHOOK) {
@@ -18,7 +19,21 @@ export default function main() {
 
   if (WEBHOOK) {
     // start server
-    const server = createServer((req, res) => {
+    const server = createServer(async (req, res) => {
+      const buffers = [] as Uint8Array[];
+
+      for await (const chunk of req) {
+        buffers.push(chunk);
+      }
+
+      const data = Buffer.concat(buffers).toString();
+
+      // check webhook
+      if (!checkWebhook(req.headers["x-hub-signature-256"] as string | undefined ?? '', data)) {
+        logError('Request hash is invalid. Ingoring request!');
+        return;
+      }
+
       onRepoUpdate();
       res.writeHead(200).end();
     });
@@ -26,6 +41,19 @@ export default function main() {
       logInfo(`Server running at http://${HOSTNAME}:${PORT}`);
     });
   }
+}
+
+/**
+ *  returns true if request hash is correct
+ *  */
+function checkWebhook(header: string, payload: string): boolean {
+  // if secret is not set, don0t check
+  if (!WEBHOOK_SECRET) {
+    return true;
+  }
+
+  const payloadHash = createHmac('sha256', WEBHOOK_SECRET).update(payload).digest('hex');
+  return header === 'sha256=' + payloadHash;
 }
 
 async function onRepoUpdate() {

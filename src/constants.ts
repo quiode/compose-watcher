@@ -11,3 +11,5 @@ export const LOG: 'info' | 'debug' | 'warning' | 'error' | string = process.env.
 export const REPO_DIR = process.env.REPO_DIR ?? process.cwd() + '/../repository';
 
 export const REMOTE_URL = process.env.REMOTE_URL ?? '';
+
+export const WEBHOOK_SECRET = process.env.WEBHOOK_SECREET ?? '';
