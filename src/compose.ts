@@ -1,6 +1,12 @@
 import { spawn } from 'child_process';
 import commandExists from 'command-exists';
 
+interface ComposeResult {
+  exitCode: number | null;
+  err: string;
+  out: string;
+}
+
 export function upAll(file: string, log: boolean) {
   return dockerExec('up -d', file, log);
 }
@@ -9,7 +15,7 @@ export function pullAll(file: string, log: boolean) {
   return dockerExec('pull', file, log);
 }
 
-function dockerExec(command: string, file: string, log: boolean): Promise<void> {
+function dockerExec(command: string, file: string, log: boolean): Promise<ComposeResult> {
   return new Promise((resolve, reject): void => {
     let compose = 'docker compose';
 
@@ -27,7 +33,7 @@ function dockerExec(command: string, file: string, log: boolean): Promise<void> 
       reject(err)
     });
 
-    const result = {
+    const result: ComposeResult = {
       exitCode: null as number | null,
       err: '',
       out: ''
