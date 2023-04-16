@@ -27,14 +27,14 @@
 	"devDependencies": {
 		"@types/node": "^18.15.11",
 		"nodemon": "^2.0.22",
-		"ts-node": "^10.9.1",
-		"typescript": "^5.0.4"
+		"ts-node": "^10.9.1"
 	},
 	"dependencies": {
 		"docker-compose": "^0.23.19",
 		"glob": "^10.0.0",
 		"simple-git": "^3.17.0",
 		"winston": "^3.8.2",
-		"rimraf": "^5.0.0"
+		"rimraf": "^5.0.0",
+		"typescript": "^5.0.4"
 	}
 }
