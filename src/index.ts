@@ -1,6 +1,6 @@
 import { createServer } from 'http';
 import { REPO_DIR, HOSTNAME, INTERVAL, LOG, PORT, REMOTE_URL, WEBHOOK } from './constants';
-import { errorAndExit, logDebug, logInfo, logWarn } from './logger';
+import { errorAndExit, logDebug, logError, logInfo, logWarn } from './logger';
 import { Glob } from 'glob';
 import { git } from './git';
 import { existsSync } from 'fs';
@@ -33,6 +33,7 @@ async function onRepoUpdate() {
   // timer start
   const startTime = new Date();
   let update_count = 0;
+  let error_count = 0;
 
   // if repo is new, always execute compose up
   let newRepo = false;
@@ -128,7 +129,9 @@ async function onRepoUpdate() {
         await pullAll(file.file, LOG === 'debug');
       } catch {
         logDebug("File: " + JSON.stringify(file));
-        errorAndExit("Error while pulling images!");
+        logError("Error while pulling image for: " + file.file);
+        error_count++;
+        continue;
       }
 
       try {
@@ -136,7 +139,9 @@ async function onRepoUpdate() {
         await upAll(file.file, LOG === 'debug');
       } catch {
         logDebug("File: " + JSON.stringify(file));
-        errorAndExit("Error while running compose up!");
+        logError('Error while running compose up for: ' + file.file);
+        error_count++;
+        continue;
       }
 
       update_count++;
@@ -144,7 +149,7 @@ async function onRepoUpdate() {
 
     // timer end
     const time_diff = Math.round(((new Date()).getTime() - startTime.getTime()) / 1000);
-    logInfo(`Updated ${update_count} compose files in ${time_diff} seconds!`);
+    logInfo(`Updated ${update_count} compose files in ${time_diff} seconds with ${error_count} errors!`);
   } else {
     logDebug("No changes found.");
   }
