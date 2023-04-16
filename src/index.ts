@@ -1,5 +1,5 @@
 import { createServer } from 'http';
-import { GIT_DIR, HOSTNAME, INTERVAL, LOG, PORT, REMOTE_URL, WEBHOOK } from './constants';
+import { REPO_DIR, HOSTNAME, INTERVAL, LOG, PORT, REMOTE_URL, WEBHOOK } from './constants';
 import { errorAndExit, logDebug, logInfo, logWarn } from './logger';
 import { Glob } from 'glob';
 import { git } from './git';
@@ -39,10 +39,10 @@ async function onRepoUpdate() {
 
   // Check if Repo doesn't exist, clone repo
   if (!(await git.checkIsRepo())) {
-    logWarn(`No git repository found in ${GIT_DIR}. Creating a new one with url ${REMOTE_URL}.`);
+    logWarn(`No git repository found in ${REPO_DIR}. Creating a new one with url ${REMOTE_URL}.`);
 
     try {
-      await git.clone(REMOTE_URL, GIT_DIR);
+      await git.clone(REMOTE_URL, REPO_DIR);
       logDebug("New Git Repository created!");
       newRepo = true;
     } catch (error) {
@@ -67,7 +67,7 @@ async function onRepoUpdate() {
     }
 
     // find all docker compose files
-    const glob = new Glob('**/docker-compose.{yml,yaml}', { cwd: GIT_DIR, nodir: true, absolute: true });
+    const glob = new Glob('**/docker-compose.{yml,yaml}', { cwd: REPO_DIR, nodir: true, absolute: true });
 
     // .watcher-{x}
     // loop through all glob files and assign each a number (-1 if no .watcher-x annotation)
@@ -80,7 +80,7 @@ async function onRepoUpdate() {
         continue;
       }
 
-      const watcherGLob = new Glob(dir + '.watcher-+(0|1|2|3|4|5|6|7|8|9)', { cwd: GIT_DIR, nodir: true, absolute: true });
+      const watcherGLob = new Glob(dir + '.watcher-+(0|1|2|3|4|5|6|7|8|9)', { cwd: REPO_DIR, nodir: true, absolute: true });
       const ignoreList: string[] = [];
 
       for (const ignoreFile of watcherGLob) {

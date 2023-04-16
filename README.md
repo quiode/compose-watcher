@@ -1,4 +1,4 @@
-# Compose Watcher
+# Compse Watcher
 
 // TODO
 
@@ -14,6 +14,10 @@
 // TODO
 
 ## Configuration
+
+### Secrets
+
+// TODO
 
 ### .watcherignore
 
@@ -35,7 +39,7 @@ If a file with the name `.watcher-{x}` if found, where x is a number (`.watcher-
 - `PORT` (default: `80`)
   - webhook port, -1 to disable
 - `HOSTNAME` (default: `127.0.0.1`)
-- `GIT_DIR` (default: `./repository`)
+- `REPO_DIR` (default: `./repository`)
   - GIT Repository Diretory
 - `REMOTE_URL` (default: `''`)
   - URL of the REMOTE, needed when no git directory exists
