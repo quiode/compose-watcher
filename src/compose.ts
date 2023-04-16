@@ -7,22 +7,22 @@ interface ComposeResult {
 }
 
 export function upAll(file: string, log: boolean) {
-  return dockerExec('up -d', file, log);
+  return dockerExec(file, log, 'up', '-d');
 }
 
 export function pullAll(file: string, log: boolean) {
-  return dockerExec('pull', file, log);
+  return dockerExec(file, log, 'pull');
 }
 
-function dockerExec(command: string, file: string, log: boolean): Promise<ComposeResult> {
+function dockerExec(file: string, log: boolean, command: string, ...args: string[]): Promise<ComposeResult> {
   return new Promise((resolve, reject): void => {
-    const args: string[] = ['compose', '--file', file, command];
+    const combined_args: string[] = ['compose', '--file', file, command, ...args];
 
     if (log) {
-      console.log("Docker Compose Command: docker", args.join(" "));
+      console.log("Docker Compose Command: docker", combined_args.join(" "));
     }
 
-    const childProc = spawn('docker', args);
+    const childProc = spawn('docker', combined_args);
 
     childProc.on('error', (err): void => {
       reject(err);
