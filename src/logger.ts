@@ -14,7 +14,7 @@ if (WATCHER_TELEGRAM_TOKEN && WATCHER_CHAT_ID) {
     token: WATCHER_TELEGRAM_TOKEN
   }));
 
-  logInfo('Telegram-Logging enabled!');
+  logDebug('Telegram-Logging enabled!');
 }
 
 export function logDebug(message: string) {
