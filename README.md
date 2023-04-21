@@ -70,6 +70,12 @@ If a file with the name `.watcher-{x}` if found, where x is a number (`.watcher-
 - `WEBHOOK_SECRET` (default: `''`)
   - if set, check webhook (improves security)
   - see: <https://docs.github.com/en/webhooks-and-events/webhooks/securing-your-webhooks>
+- `WATCHER_TELEGRAM_TOKEN` (default: `''`)
+  - token for optional telegram bot
+  - both `WATCHER_CHAT_ID` and `WATCHER_TELEGRAM_TOKEN` have to be set to enable telegram notification
+- `WATCHER_CHAT_ID` (default: `''`)
+  - chat id for optional telegram bot
+  - both `WATCHER_CHAT_ID` and `WATCHER_TELEGRAM_TOKEN` have to be set to enable telegram notification
 
 ### Volumes
 

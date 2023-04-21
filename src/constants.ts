@@ -13,3 +13,7 @@ export const REPO_DIR = process.env.REPO_DIR ?? process.cwd() + '/../repository'
 export const REMOTE_URL = process.env.REMOTE_URL ?? '';
 
 export const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET ?? '';
+
+export const WATCHER_TELEGRAM_TOKEN = process.env.WATCHER_TELEGRAM_TOKEN ?? '';
+
+export const WATCHER_CHAT_ID = Number(process.env.WATCHER_CHAT_ID ?? '');

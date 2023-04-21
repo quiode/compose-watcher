@@ -1,11 +1,19 @@
 import { createLogger, format, transports } from "winston";
-import { LOG } from './constants';
+import { LOG, WATCHER_CHAT_ID, WATCHER_TELEGRAM_TOKEN } from './constants';
+import TelegramLogger from "winston-telegram";
 
 const logger = createLogger({
   level: LOG,
   format: format.combine(format.timestamp(), format.printf(info => `${info.timestamp} | ${info.level} | ${info.message}`)),
   transports: [new transports.Console()]
 });
+
+if (WATCHER_TELEGRAM_TOKEN && WATCHER_CHAT_ID) {
+  logger.add(new TelegramLogger({
+    chatId: WATCHER_CHAT_ID,
+    token: WATCHER_TELEGRAM_TOKEN
+  }));
+}
 
 export function logDebug(message: string) {
   logger.log({
