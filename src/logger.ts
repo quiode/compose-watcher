@@ -11,7 +11,8 @@ const logger = createLogger({
 if (WATCHER_TELEGRAM_TOKEN && WATCHER_CHAT_ID) {
   logger.add(new TelegramLogger({
     chatId: WATCHER_CHAT_ID,
-    token: WATCHER_TELEGRAM_TOKEN
+    token: WATCHER_TELEGRAM_TOKEN,
+    level: LOG
   }));
 
   logDebug('Telegram-Logging enabled!');
