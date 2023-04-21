@@ -1,5 +1,5 @@
 import { createServer } from 'http';
-import { REPO_DIR, HOSTNAME, INTERVAL, LOG, PORT, REMOTE_URL, WEBHOOK, WEBHOOK_SECRET } from './constants';
+import { WATCHER_REPO_DIR, WATCHER_HOSTNAME, WATCHER_INTERVAL, WATCHER_LOG, WATCHER_PORT, WATCHER_REMOTE_URL, WEBHOOK, WATCHER_WEBHOOK_SECRET } from './constants';
 import { errorAndExit, logDebug, logError, logInfo, logWarn } from './logger';
 import { Glob } from 'glob';
 import { git } from './git';
@@ -8,13 +8,13 @@ import { pullAll, upAll } from './compose';
 import { createHash, createHmac } from 'crypto';
 
 export default function main() {
-  if (!INTERVAL && !WEBHOOK) {
+  if (!WATCHER_INTERVAL && !WEBHOOK) {
     errorAndExit('No webhook and no interval is defined. Shutting down!');
   }
 
-  if (INTERVAL > 0) {
-    setInterval(onRepoUpdate, INTERVAL * 1000);
-    logInfo(`Checking every ${INTERVAL} seconds`);
+  if (WATCHER_INTERVAL > 0) {
+    setInterval(onRepoUpdate, WATCHER_INTERVAL * 1000);
+    logInfo(`Checking every ${WATCHER_INTERVAL} seconds`);
   }
 
   if (WEBHOOK) {
@@ -38,8 +38,8 @@ export default function main() {
       onRepoUpdate();
       res.writeHead(200).end();
     });
-    server.listen(PORT, HOSTNAME, () => {
-      logInfo(`Server running at http://${HOSTNAME}:${PORT}`);
+    server.listen(WATCHER_PORT, WATCHER_HOSTNAME, () => {
+      logInfo(`Server running at http://${WATCHER_HOSTNAME}:${WATCHER_PORT}`);
     });
   }
 }
@@ -49,11 +49,11 @@ export default function main() {
  *  */
 function checkWebhook(header: string, payload: string): boolean {
   // if secret is not set, don0t check
-  if (!WEBHOOK_SECRET) {
+  if (!WATCHER_WEBHOOK_SECRET) {
     return true;
   }
 
-  const payloadHash = createHmac('sha256', WEBHOOK_SECRET).update(payload).digest('hex');
+  const payloadHash = createHmac('sha256', WATCHER_WEBHOOK_SECRET).update(payload).digest('hex');
   return header === 'sha256=' + payloadHash;
 }
 
@@ -69,10 +69,10 @@ async function onRepoUpdate() {
 
   // Check if Repo doesn't exist, clone repo
   if (!(await git.checkIsRepo())) {
-    logWarn(`No git repository found in ${REPO_DIR}. Creating a new one with url ${REMOTE_URL}.`);
+    logWarn(`No git repository found in ${WATCHER_REPO_DIR}. Creating a new one with url ${WATCHER_REMOTE_URL}.`);
 
     try {
-      await git.clone(REMOTE_URL, REPO_DIR);
+      await git.clone(WATCHER_REMOTE_URL, WATCHER_REPO_DIR);
       logDebug("New Git Repository created!");
       newRepo = true;
     } catch (error) {
@@ -104,7 +104,7 @@ async function onRepoUpdate() {
     }
 
     // find all docker compose files
-    const glob = new Glob('**/docker-compose.{yml,yaml}', { cwd: REPO_DIR, nodir: true, absolute: true });
+    const glob = new Glob('**/docker-compose.{yml,yaml}', { cwd: WATCHER_REPO_DIR, nodir: true, absolute: true });
 
     // .watcher-{x}
     // loop through all glob files and assign each a number (-1 if no .watcher-x annotation)
@@ -117,7 +117,7 @@ async function onRepoUpdate() {
         continue;
       }
 
-      const watcherGLob = new Glob(dir + '.watcher-+(0|1|2|3|4|5|6|7|8|9)', { cwd: REPO_DIR, nodir: true, absolute: true });
+      const watcherGLob = new Glob(dir + '.watcher-+(0|1|2|3|4|5|6|7|8|9)', { cwd: WATCHER_REPO_DIR, nodir: true, absolute: true });
       const ignoreList: string[] = [];
 
       for (const ignoreFile of watcherGLob) {
@@ -158,7 +158,7 @@ async function onRepoUpdate() {
       while (!success) {
         try {
           // compose pull
-          await pullAll(file.file, LOG === 'debug');
+          await pullAll(file.file, WATCHER_LOG === 'debug');
           success = true;
         } catch {
           err_count++;
@@ -174,7 +174,7 @@ async function onRepoUpdate() {
 
       try {
         // compose up
-        await upAll(file.file, LOG === 'debug');
+        await upAll(file.file, WATCHER_LOG === 'debug');
       } catch {
         logDebug("File: " + JSON.stringify(file));
         logError('Error while running compose up for: ' + file.file);

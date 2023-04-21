@@ -20,7 +20,7 @@ services:
   compose-watcher:
     image: "quiooo/compose-watcher"
     environment:
-      PORT: "-1"
+      WATCHER_PORT: "-1"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /home/your-username/repo:/app/repository:rw
@@ -37,7 +37,7 @@ services:
 
 ### Secrets
 
-If the `WEBHOOK_SECRET` environment variable is set, the application checks the webhooks for a secret. More can be found at <https://docs.github.com/en/webhooks-and-events/webhooks/securing-your-webhooks>.
+If the `WATCHER_WEBHOOK_SECRET` environment variable is set, the application checks the webhooks for a secret. More can be found at <https://docs.github.com/en/webhooks-and-events/webhooks/securing-your-webhooks>.
 
 ### .watcherignore
 
@@ -51,23 +51,23 @@ If a file with the name `.watcher-{x}` if found, where x is a number (`.watcher-
 
 ### Environment Variables
 
-- `LOG` (default: `info`)
+- `WATCHER_LOG` (default: `info`)
   - `debug`, `info`, `warning`, `error`
   - Set in Dockerfile
-- `INTERVAL` (default: `86400`)
+- `WATCHER_INTERVAL` (default: `86400`)
   - pull interval in seconds
   - `-1` to disable interval
-- `PORT` (default: `80`)
+- `WATCHER_PORT` (default: `80`)
   - webhook port, -1 to disable
   - Set in Dockerfile
-- `HOSTNAME` (default: `127.0.0.1`)
+- `WATCHER_HOSTNAME` (default: `127.0.0.1`)
   - Set in Dockerfile
-- `REPO_DIR` (default: `./repository`)
+- `WATCHER_REPO_DIR` (default: `./repository`)
   - GIT Repository Diretory
   - Set in Dockerfile
-- `REMOTE_URL` (default: `''`)
+- `WATCHER_REMOTE_URL` (default: `''`)
   - URL of the REMOTE, needed when no git directory exists
-- `WEBHOOK_SECRET` (default: `''`)
+- `WATCHER_WEBHOOK_SECRET` (default: `''`)
   - if set, check webhook (improves security)
   - see: <https://docs.github.com/en/webhooks-and-events/webhooks/securing-your-webhooks>
 - `WATCHER_TELEGRAM_TOKEN` (default: `''`)
@@ -89,7 +89,7 @@ If a file with the name `.watcher-{x}` if found, where x is a number (`.watcher-
   - ssh, if the repo needs ssh
   - read only
 
-## Example Folder Structure of REMOTE_URL Repo
+## Example Folder Structure of WATCHER_REMOTE_URL Repo
 
 ```text
 project-1

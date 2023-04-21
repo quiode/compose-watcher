@@ -18,10 +18,10 @@ VOLUME [ "/app/repository" ]
 VOLUME [ "/root/.ssh" ]
 # Read only (:ro)
 VOLUME [ "/var/run/docker.sock" ]
-ENV PORT=80
-ENV HOSTNAME=0.0.0.0
-ENV LOG=info
-ENV REPO_DIR=/app/repository
+ENV WATCHER_PORT=80
+ENV WATCHER_HOSTNAME=0.0.0.0
+ENV WATCHER_LOG=info
+ENV WATCHER_REPO_DIR=/app/repository
 EXPOSE 80
 
 # ignore double ownership

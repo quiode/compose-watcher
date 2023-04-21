@@ -1,9 +1,9 @@
 import { createLogger, format, transports } from "winston";
-import { LOG, WATCHER_CHAT_ID, WATCHER_TELEGRAM_TOKEN } from './constants';
+import { WATCHER_LOG, WATCHER_CHAT_ID, WATCHER_TELEGRAM_TOKEN } from './constants';
 import TelegramLogger from "winston-telegram";
 
 const logger = createLogger({
-  level: LOG,
+  level: WATCHER_LOG,
   format: format.combine(format.timestamp(), format.printf(info => `${info.timestamp} | ${info.level} | ${info.message}`)),
   transports: [new transports.Console()]
 });
@@ -12,7 +12,7 @@ if (WATCHER_TELEGRAM_TOKEN && WATCHER_CHAT_ID) {
   logger.add(new TelegramLogger({
     chatId: WATCHER_CHAT_ID,
     token: WATCHER_TELEGRAM_TOKEN,
-    level: LOG
+    level: WATCHER_LOG
   }));
 
   logDebug('Telegram-Logging enabled!');

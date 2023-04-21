@@ -6,10 +6,10 @@
       "request": "launch",
       "type": "node-terminal",
       "env": {
-        "PORT": "8080",
-        "LOG": "debug",
-        "INTERVAL": "-1",
-        "REMOTE_URL": "git@github.com:quiode/beaststation-docker-compose.git"
+        "WATCHER_PORT": "8080",
+        "WATCHER_LOG": "debug",
+        "WATCHER_INTERVAL": "-1",
+        "WATCHER_REMOTE_URL": "git@github.com:quiode/beaststation-docker-compose.git"
       },
     }
   ]

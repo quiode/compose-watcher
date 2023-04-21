@@ -1,18 +1,18 @@
-export const INTERVAL = Number.isNaN(Number(process.env.INTERVAL)) ? 86400 : Number(process.env.INTERVAL);
+export const WATCHER_INTERVAL = Number.isNaN(Number(process.env.WATCHER_INTERVAL)) ? 86400 : Number(process.env.WATCHER_INTERVAL);
 
-export const PORT = Number.isNaN(Number(process.env.PORT)) ? 80 : Number(process.env.PORT);
+export const WATCHER_PORT = Number.isNaN(Number(process.env.WATCHER_PORT)) ? 80 : Number(process.env.WATCHER_PORT);
 
-export const WEBHOOK = PORT > 0;
+export const WEBHOOK = WATCHER_PORT > 0;
 
-export const HOSTNAME = process.env.HOSTNAME ?? '127.0.0.1';
+export const WATCHER_HOSTNAME = process.env.WATCHER_HOSTNAME ?? '127.0.0.1';
 
-export const LOG: 'info' | 'debug' | 'warning' | 'error' | string = process.env.LOG ?? 'info';
+export const WATCHER_LOG: 'info' | 'debug' | 'warning' | 'error' | string = process.env.WATCHER_LOG ?? 'info';
 
-export const REPO_DIR = process.env.REPO_DIR ?? process.cwd() + '/../repository';
+export const WATCHER_REPO_DIR = process.env.WATCHER_REPO_DIR ?? process.cwd() + '/../repository';
 
-export const REMOTE_URL = process.env.REMOTE_URL ?? '';
+export const WATCHER_REMOTE_URL = process.env.WATCHER_REMOTE_URL ?? '';
 
-export const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET ?? '';
+export const WATCHER_WEBHOOK_SECRET = process.env.WATCHER_WEBHOOK_SECRET ?? '';
 
 export const WATCHER_TELEGRAM_TOKEN = process.env.WATCHER_TELEGRAM_TOKEN ?? '';
 
