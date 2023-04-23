@@ -101,3 +101,9 @@ watcher
   docker-compose-yml
   .watcherignore
 ```
+
+## Notice
+
+### Relative Paths
+
+Relative Volume Paths mostly won't work. They will only work when the local repository path and the repository path inside the container match.
