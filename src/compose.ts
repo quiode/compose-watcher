@@ -1,4 +1,5 @@
 import { spawn } from 'child_process';
+import { getDir } from './helper';
 
 interface ComposeResult {
   exitCode: number | null;
@@ -22,7 +23,9 @@ function dockerExec(file: string, log: boolean, command: string, ...args: string
       console.log("Docker Compose Command: docker", combined_args.join(" "));
     }
 
-    const childProc = spawn('docker', combined_args);
+    const childProc = spawn('docker', combined_args, {
+      cwd: getDir(file)
+    });
 
     childProc.on('error', (err): void => {
       reject(err);

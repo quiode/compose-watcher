@@ -5,7 +5,8 @@ import { Glob } from 'glob';
 import { git } from './git';
 import { existsSync } from 'fs';
 import { pullAll, upAll } from './compose';
-import { createHash, createHmac } from 'crypto';
+import { createHash, createHmac, getDiffieHellman } from 'crypto';
+import { getDir } from './helper';
 
 export default function main() {
   if (!WATCHER_INTERVAL && !WEBHOOK) {
@@ -110,7 +111,7 @@ async function onRepoUpdate() {
     // loop through all glob files and assign each a number (-1 if no .watcher-x annotation)
     const files: { file: string, order: number }[] = [];
     for (const file of glob) {
-      const dir = file.slice(0, file.lastIndexOf('docker-compose'));
+      const dir = getDir(file);
       // check for watcher file
       if (existsSync(dir + '.watcherignore')) {
         logDebug(`Found a .watcherignore file, skipping directory (${dir})!`);
