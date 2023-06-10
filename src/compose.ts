@@ -8,7 +8,7 @@ interface ComposeResult {
 }
 
 export function upAll(file: string, log: boolean) {
-  return dockerExec(file, log, 'up', '-d');
+  return dockerExec(file, log, 'up', '-d', '--remove-orphans');
 }
 
 export function pullAll(file: string, log: boolean) {
