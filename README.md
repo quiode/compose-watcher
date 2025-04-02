@@ -1,4 +1,4 @@
-# Compse Watcher
+# Compose Watcher
 
 Watches a Git Repository containing docker-compose files and updates the running containers when new updates exist. Can be either configured using an interval, a webhook or both.
 If no Repository exists, clones a new repository and starts all services.
